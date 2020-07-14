@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Fueling Stations</h2>
+
+<div class="container-fluid">
+    <div class="row">
+        @(Html.Kendo().Grid<TechnicalTask.ViewModels.fuel_station>()
+            .Name("grid")
+            .Columns(c =>
+            {
+                c.Bound(p => p.fuel_type_code);
+                c.Bound(p => p.station_name);
+                c.Bound(p => p.street_address);
+                c.Bound(p => p.city);
+                c.Bound(p => p.state);
+                c.Bound(p => p.zip);
+                c.Bound(p => p.country);
+                c.Bound(p => p.intersection_directions);
+                c.Bound(p => p.station_phone);
+                c.Bound(p => p.status_code);
+                c.Bound(p => p.access_code);
+            })
+            .ColumnMenu(menu => menu.Columns(true).Sortable(true))
+            .Reorderable(reorder => reorder.Columns(true))
+            .Pageable()
+            .Resizable(resize => resize.Columns(true))
+            .Filterable(filterable => filterable
+                .Operators(operators => operators
+                    .ForString(str => str.Clear()
+                        .Contains("Contains")
+                    )
+                    .ForNumber(str => str.Clear()
+                        .IsEqualTo("Equals")
+                    )
+                        .ForDate(str => str.Clear()
+                        .IsGreaterThanOrEqualTo("Is after")
+                        .IsLessThanOrEqualTo("Is before")
+                    )
+                )
+                .Extra(false)
+            )
+            .Sortable()
+            .Scrollable()
+            .Selectable()
+            .HtmlAttributes(new { style = "height:750px;" })
+            .NoRecords("No records found")
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(50)
+                .Model(model => model.Id(p => p.Id))
+                .Read(read => read.Action("Read", "Grid"))
+            )
+        )
+    </div>
+</div>
+
